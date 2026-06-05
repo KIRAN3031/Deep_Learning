@@ -1,0 +1,186 @@
+/* ==========================================================================
+   RISKSHIELD AI CENTRAL MANAGEMENT STYLESHEET
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap');
+
+/* Global Reset overrides inside Streamlit wrapper components */
+.main .block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 95%;
+}
+
+/* Primary Typography Rules Override */
+h1, h2, h3, h4, h5, h6, p, span, div, label {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+code, pre {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Premium Gradient Header Implementation */
+.gradient-header {
+    background: linear-gradient(95deg, #00b0ff 0%, #9c27b0 50%, #ff1744 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    font-size: 2.75rem !important;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem !important;
+}
+
+.hero-subtitle {
+    color: #8b949e;
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/* Glassmorphism Structural Core Layout Components */
+.glass-card {
+    background: rgba(22, 27, 34, 0.65) !important;
+    border: 1px solid rgba(48, 54, 65, 0.8) !important;
+    border-radius: 16px !important;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.panel-card {
+    padding: 16px;
+    background: rgba(13, 17, 23, 0.85) !important;
+}
+
+/* Custom Interactive Micro-Metric Cards */
+.metric-card {
+    background: linear-gradient(135deg, rgba(22, 27, 34, 0.8) 0%, rgba(13, 17, 23, 0.8) 100%);
+    border: 1px solid rgba(48, 54, 65, 0.6);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: left;
+    margin-bottom: 15px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    border-color: #00b0ff;
+    box-shadow: 0 6px 20px rgba(0, 176, 255, 0.15);
+}
+
+.metric-card h5 {
+    color: #8b949e;
+    font-size: 0.75rem !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0 0 8px 0 !important;
+}
+
+.metric-card h2 {
+    color: #ffffff;
+    font-size: 2rem !important;
+    font-weight: 800;
+    margin: 0 0 6px 0 !important;
+}
+
+.metric-card p {
+    font-size: 0.85rem;
+    margin: 0 !important;
+    font-weight: 500;
+}
+
+/* Autonomous Sequential Processing Line Blocks Layouts */
+.workflow-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(22, 27, 34, 0.4);
+    border: 1px dashed #30363d;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+}
+
+.workflow-step {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: center;
+    min-width: 140px;
+}
+
+.workflow-step h5 {
+    margin: 0 0 4px 0 !important;
+    color: #00b0ff;
+    font-size: 0.9rem !important;
+    font-weight: 700;
+}
+
+.workflow-step p {
+    margin: 0 !important;
+    font-size: 0.75rem;
+    color: #8b949e;
+}
+
+.arrow-container {
+    font-weight: bold;
+    color: #9c27b0;
+    font-size: 1.5rem;
+    padding: 0 10px;
+    transform: rotate(-90deg); /* Transform directional pointers horizontally across row scopes */
+}
+
+/* Sidebar Custom Context Branding Blocks */
+.sidebar-branding {
+    padding: 10px 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #30363d;
+}
+
+.sidebar-branding h1 {
+    font-size: 1.5rem !important;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin: 0 !important;
+}
+
+.sidebar-branding p {
+    font-size: 0.75rem;
+    color: #ff1744;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 2px 0 0 0 !important;
+}
+
+/* Clean Custom Material Buttons Override Controllers */
+.stButton>button {
+    background: linear-gradient(90deg, #00b0ff 0%, #00e676 100%) !important;
+    color: #0d1117 !important;
+    font-weight: 700 !important;
+    border: none !important;
+    padding: 12px 28px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    box-shadow: 0 4px 15px rgba(0, 230, 118, 0.2) !important;
+}
+
+.stButton>button:hover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 6px 20px rgba(0, 176, 255, 0.4) !important;
+}
+
+/* Custom table optimization constraints */
+.dataframe {
+    border: 1px solid #30363d !important;
+    background-color: #0d1117 !important;
+}
