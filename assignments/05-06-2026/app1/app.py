@@ -63,14 +63,12 @@ def load_deep_learning_models():
         "Self-Attention Network": None,
         "Hybrid Deep Learning Model": None
     }
-
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     
     # Path initializers matching specifications
-    dense_path = os.path.join(BASE_DIR, "Dense.h5")
-    attn_path = os.path.join(BASE_DIR, "Attention.h5")
-    lstm_path = os.path.join(BASE_DIR, "LSTM.h5")
-    scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
+    dense_path = "./Dense.keras"
+    attn_path = "./Attention.h5"
+    lstm_path = "./LSTM.h5"
+    scaler_path = "./scaler.pkl"
     
     # Scaler Loading Configuration
     if os.path.exists(scaler_path):
