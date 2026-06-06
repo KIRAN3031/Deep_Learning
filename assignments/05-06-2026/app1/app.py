@@ -1,16 +1,17 @@
 import streamlit as st
+import tensorflow as tf
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import classification_report, confusion_matrix, recall_score
-import tensorflow as tf
 import pickle
 import os
 import time
 import base64
 from datetime import datetime
+from tensorflow.keras.layers import Layer
 
 # ==========================================
 # 1. INITIAL SETUP & THEMING CONFIGURATION
@@ -63,12 +64,12 @@ def load_deep_learning_models():
         "Self-Attention Network": None,
         "Hybrid Deep Learning Model": None
     }
-    
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     # Path initializers matching specifications
-    dense_path = "./Dense.keras"
-    attn_path = "./Attention.h5"
-    lstm_path = "./LSTM.h5"
-    scaler_path = "./scaler.pkl"
+    dense_path = os.path.join(BASE_DIR, "Dense.h5")
+    attn_path = os.path.join(BASE_DIR, "Attention.h5")
+    lstm_path = os.path.join(BASE_DIR, "LSTM.h5")
+    scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
     
     # Scaler Loading Configuration
     if os.path.exists(scaler_path):
@@ -76,15 +77,54 @@ def load_deep_learning_models():
             scaler = pickle.load(f)
     else:
         scaler = instantiate_fallback_system()
+
+    class PositionalEncoding(Layer):
+        def __init__(self, sequence_len, d_model, **kwargs):
+            super(PositionalEncoding, self).__init__(**kwargs)
+            self.pos_encoding = self.calculate_position_matrix(sequence_len, d_model)
+
+        def calculate_position_matrix(self, seq_len, d_model):
+            pos = np.arange(seq_len)[:, np.newaxis]
+            i = np.arange(d_model)[np.newaxis, :]
+            angle_rates = 1 / np.power(10000, (2 * (i // 2)) / np.float32(d_model))
+            angle_rads = pos * angle_rates
+
+            angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
+            angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
+            return tf.cast(angle_rads[np.newaxis, ...], dtype=tf.float32)
+
+        def call(self, inputs):
+            return inputs + self.pos_encoding[:, :tf.shape(inputs)[1], :]
+
+    class AttentionLayer(Layer):
+        def __init__(self, **kwargs):
+            super(AttentionLayer, self).__init__(**kwargs)
+
+        def build(self, input_shape):
+            self.W = self.add_weight(name="att_weight", shape=(input_shape[-1], 1), initializer="glorot_uniform", trainable=True)
+            self.b = self.add_weight(name="att_bias", shape=(input_shape[1], 1), initializer="zeros", trainable=True)
+            super(AttentionLayer, self).build(input_shape)
+
+        def call(self, inputs):
+            e = tf.tanh(tf.matmul(inputs, self.W) + self.b)
+            a = tf.nn.softmax(e, axis=1)
+            output = inputs * a
+            return tf.reduce_sum(output, axis=1), a
         
     # Model Binary Checkers
     try:
         if os.path.exists(dense_path):
             models["Baseline Neural Network"] = tf.keras.models.load_model(dense_path, compile=False)
+            print("Baseline Neural Network model loaded successfully.")
         if os.path.exists(attn_path):
-            models["Self-Attention Network"] = tf.keras.models.load_model(attn_path, compile=False)
+            print("-"*50)
+            custom_objects = {'PositionalEncoding': PositionalEncoding, 'AttentionLayer': AttentionLayer}
+            attention_model = tf.keras.models.load_model(attn_path, custom_objects=custom_objects)
+            print("Self-Attention Network model loaded successfully.")
         if os.path.exists(lstm_path):
-                models["Hybrid Deep Learning Model"] = tf.keras.models.load_model(lstm_path, compile=False)
+            print("-"*50)
+            models["Hybrid Deep Learning Model"] = tf.keras.models.load_model(lstm_path, compile=False)
+            print("Hybrid Deep Learning Model loaded successfully.")
     except Exception as e:
             st.sidebar.warning(f"Engine Warning: Core model load bypassed. Running emulation modules.")
         
