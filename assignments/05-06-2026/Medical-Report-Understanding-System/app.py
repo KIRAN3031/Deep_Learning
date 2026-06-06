@@ -250,7 +250,10 @@ class MedicalAttentionModel(nn.Module):
 # ─────────────────────────────────────────────────────────
 @st.cache_resource(show_spinner="Loading dataset & building vocabulary…")
 def load_everything():
-    DATA_PATH = "mtsamples.csv"
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # 2. Join it with your file name to create an absolute path
+    DATA_PATH = os.path.join(BASE_DIR, "mtsamples.csv")
     if not os.path.exists(DATA_PATH):
         st.error("❌ 'mtsamples.csv' not found in the same folder as app.py")
         st.stop()
