@@ -6,6 +6,7 @@ import pickle
 import re
 import html
 import io
+import os
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -26,17 +27,18 @@ st.set_page_config(
 # =====================================================
 @st.cache_resource
 def load_artifacts():
+    BASE_DIR = os.path.dirname(__file__)
     # Load neural network model with Multi-Head Attention
     model = tf.keras.models.load_model(
-        "attention_model.h5",
+        os.path.join(BASE_DIR, "attention_model.h5"),
         compile=False
     )
     
     # Load pickle tokenizers and encoders
-    with open("tokenizer.pkl", "rb") as f:
+    with open(os.path.join(BASE_DIR, "tokenizer.pkl"), "rb") as f:
         tokenizer = pickle.load(f)
         
-    with open("label_encoder.pkl", "rb") as f:
+    with open(os.path.join(BASE_DIR, "label_encoder.pkl"), "rb") as f:
         label_encoder = pickle.load(f)
         
     return model, tokenizer, label_encoder
