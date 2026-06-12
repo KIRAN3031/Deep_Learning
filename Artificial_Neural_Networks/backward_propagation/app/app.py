@@ -8,16 +8,16 @@ import os
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Car Price Predictor", page_icon="🚗", layout="centered")
-
+BASE_DIR = os.path.dirname(__file__)
 # --- LOAD DATA AND PREPROCESSORS ---
 @st.cache_resource
 def load_resources():
     # 1. Load the original data to replicate the exact training columns
-    if not os.path.exists('CarPrice_dataset.csv'):
+    if not os.path.exists(os.path.join(BASE_DIR, 'CarPrice_dataset.csv')):
         st.error("Dataset 'CarPrice_dataset' not found!")
         return None, None, None, None, None
         
-    df = pd.read_csv('CarPrice_dataset.csv')
+    df = pd.read_csv(os.path.join(BASE_DIR, 'CarPrice_dataset.csv'))
     df.drop_duplicates(inplace=True)
     
     # Identify categorical columns (objects in the CSV)
@@ -38,7 +38,7 @@ def load_resources():
     # 3. Load the trained Keras model
     try:
         # Looking for the .h5 format common in Keras
-        model = tf.keras.models.load_model('trained_model.keras')
+        model = tf.keras.models.load_model(os.path.join(BASE_DIR, 'trained_model.keras'))
     except Exception as e:
         st.error(f"Model file error: {e}")
         model = None
@@ -49,8 +49,8 @@ def load_resources():
 df_raw, scaler, model, cat_cols, all_encoded_cols = load_resources()
 
 # --- CUSTOM CSS ---
-if os.path.exists("styles.css"):
-    with open("styles.css") as f:
+if os.path.exists(os.path.join(BASE_DIR, "styles.css")):
+    with open(os.path.join(BASE_DIR, "styles.css")) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # --- UI HEADER ---
