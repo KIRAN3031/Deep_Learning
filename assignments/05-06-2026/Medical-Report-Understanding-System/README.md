@@ -1,2 +1,2 @@
 # Medical-Report-Understanding-System
-https://medical-report-understanding-system-es3vtfcyyedjs8ppqx565g.streamlit.app/
+https://deeplearning-bnoy2ucap44a5yfu662lzp.streamlit.app/
