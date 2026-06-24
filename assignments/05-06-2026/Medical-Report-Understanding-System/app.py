@@ -7,7 +7,7 @@
 Run:  streamlit run app.py
 """
 
-import re, math, warnings, io, os, sys
+import re, math, warnings, io, os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -265,6 +265,7 @@ def load_everything():
     df["medical_specialty"] = df["medical_specialty"].str.strip()
     df.dropna(subset=["transcription"], inplace=True)
     df.reset_index(drop=True, inplace=True)
+    df["word_count"] = df["transcription"].apply(lambda x: len(str(x).split()))
 
     TOP_N     = 10
     top_specs = df["medical_specialty"].value_counts().head(TOP_N).index.tolist()
@@ -286,10 +287,11 @@ def load_everything():
     baseline = BaselineModel(VOCAB_SIZE, 128, 256, NUM_CLASSES)
     attn_m   = MedicalAttentionModel(VOCAB_SIZE, 128, 4, 256, NUM_CLASSES)
 
-    for model, path in [(baseline, "baseline_model.pt"),
-                        (attn_m,   "attn_model.pt")]:
-        if os.path.exists(path):
-            model.load_state_dict(torch.load(path, map_location="cpu"))
+    for model, fname in [(baseline, "baseline_model.pt"),
+                         (attn_m,   "attn_model.pt")]:
+        model_path = os.path.join(BASE_DIR, fname)
+        if os.path.exists(model_path):
+            model.load_state_dict(torch.load(model_path, map_location="cpu", weights_only=True))
         model.eval()
 
     return df, df_cls, le, word2idx, NUM_CLASSES, baseline, attn_m, tf
@@ -405,7 +407,7 @@ if "Overview" in nav:
         st.plotly_chart(fig2, use_container_width=True)
     with col_b:
         # Word length box
-        df["word_count"] = df["transcription"].apply(lambda x: len(str(x).split()))
+        # word_count already computed during data loading
         fig3 = px.box(df[df["medical_specialty"].isin(
                         df["medical_specialty"].value_counts().head(8).index)],
                       x="word_count", y="medical_specialty",
@@ -436,7 +438,7 @@ elif "Text Analysis" in nav:
 
     st.markdown("<div class='section-title'>📋 Report Statistics</div>",
                 unsafe_allow_html=True)
-    df["word_count"] = df["transcription"].apply(lambda x: len(str(x).split()))
+    # word_count already computed during data loading
     fig2 = px.histogram(df, x="word_count", nbins=60,
                         color_discrete_sequence=["#4361EE"],
                         title="Report Word-Count Distribution",
